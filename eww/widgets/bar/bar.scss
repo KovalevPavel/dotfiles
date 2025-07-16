@@ -1,0 +1,68 @@
+// toolbar styles
+@mixin dotted-border($direction) {
+  border-#{$direction}: 5px dotted white;
+}
+
+@mixin solid-border($direction, $color) {
+  border-#{$direction}: 2px solid $color;
+}
+
+// Global Styles
+.bar {
+  background-color: #3a3a3a;
+  color: #b0b4bc;
+  padding: 8px;
+  font-family: "Jetbrains Mono";
+}
+
+.tray {
+  all: unset;
+  @include solid-border(top, orange);
+  @include solid-border(right, orange);
+  @include solid-border(bottom, orange);
+  @include solid-border(left, orange);
+  border-radius: 20px;
+  padding: 8px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+// Styles on classes (see bar.yuck for more information)
+
+.sidestuff slider {
+  all: unset;
+  color: #ffd5cd;
+}
+
+.metric scale trough highlight {
+  all: unset;
+  background-color: #D35D6E;
+  color: #000000;
+  border-radius: 10px;
+}
+
+.metric scale trough {
+  all: unset;
+  background-color: #4e4e4e;
+  border-radius: 50px;
+  min-height: 3px;
+  min-width: 50px;
+  margin-left: 10px;
+  margin-right: 20px;
+}
+
+.label-ram {
+  font-size: large;
+}
+
+.workspaces eventbox:hover {
+  color: #D35D6E;
+}
+
+.workspace_container.filled {
+  color: #ffffff;
+}
+
+.workspace_container.selected {
+  color: #D35D6E;
+}

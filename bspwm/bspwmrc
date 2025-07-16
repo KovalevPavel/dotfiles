@@ -2,29 +2,31 @@
 
 pgrep -x sxhkd > /dev/null || sxhkd &
 
-# launch polybar
-~/.config/polybar/launch.sh &
-
-# set cursor
+# default cursor
 xsetroot -cursor_name left_ptr &
 
+# restart picom
+picom -f &
+
+#launch toolbar
+eww open bar &
+
 # set background
-feh --bg-scale ~/Downloads/Wallpapers/wallhaven-odmmyl.jpg
+feh --bg-fill $HOME/Downloads/Wallpapers/wallhaven-odmmyl.jpg &
 
 # clear rules
-bspc rule -r '*'
+bspc rule -r '*' &
 
-bspc monitor -d I II III IV
+# add monitors
+bspc monitor -d I II III IV VPN 
 
-bspc config border_width         2
-bspc config window_gap          12
+bspc config border_width           2
+bspc config window_gap             12
 
-bspc config split_ratio          0.52
-bspc config borderless_monocle   true
-bspc config gapless_monocle      true
+bspc config split_ratio            0.5
+bspc config borderless_monocle     true
+bspc config gapless_monocle        true
+bspc config focus_follows_pointer  true
 
-bspc rule -a Gimp desktop='^8' state=floating follow=on
-bspc rule -a Chromium desktop='^2'
-bspc rule -a mplayer2 state=floating
-bspc rule -a Kupfer.py focus=on
-bspc rule -a Screenkey manage=off
+bspc rule -a AmneziaVPN desktop='VPN'
+bspc rule -a '*:*:Picture-in-Picture' state=floating sticky=on

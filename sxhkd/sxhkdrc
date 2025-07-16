@@ -15,6 +15,12 @@ super + Escape
 	pkill -USR1 -x sxhkd
 
 #
+# swap keyboard layout
+#
+ctrl + @space
+        setxkbmap -query | grep -q 'us' && setxkbmap ru || setxkbmap us,ru
+
+#
 # bspwm hotkeys
 #
 
@@ -119,3 +125,4 @@ super + alt + shift + {h,j,k,l}
 # move a floating window
 super + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
+

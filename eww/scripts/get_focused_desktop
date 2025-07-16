@@ -1,0 +1,8 @@
+#!/bin/bash
+# Получение id текущего рабочего стола
+
+echo $(bspc query -D -d)
+bspc subscribe desktop_focus | while read line
+do
+	echo $line | awk '{print $3}'
+done;

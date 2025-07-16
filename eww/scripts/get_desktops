@@ -1,0 +1,107 @@
+#!/bin/bash
+# Список рабочих столов с флагом, есть ли на них какие-нибудь окна
+
+declare -A desktops
+
+function __update_desktops() {
+	local ids
+	local names
+	local line
+
+	ids=$(bspc query -D)
+	names=$(bspc query -D --names)
+
+	for i in $ids; do
+		line=$(grep -n $i <<< $ids | sed 's/:.*//')
+		desktops["$i"]=$(sed "${line}q;d" <<< $names)
+	done;
+}
+
+function __has_windows() {
+	local d_id
+
+	d_id=$1
+
+	d_nodes_output=($(bspc query -N -n .window -d $d_id))
+	d_nodes_count=${#d_nodes_output[@]}
+	has_w=true
+	if [ $d_nodes_count -eq 0 ]; then
+		has_w=false
+	fi
+
+	echo $has_w
+}
+
+function __create_desktop_json() {
+	local d_id
+	local d_name
+	local d_windows_count
+
+	d_id=$1
+	d_name="${desktops["$d_id"]}"
+	d_nodes_output=($(bspc query -N -n .window -d $d_id))
+	d_nodes_count=${#d_nodes_output[@]}
+	
+	has_windows=true
+	if [ $d_nodes_count -eq 0 ]; then
+		has_windows=false
+	fi
+
+	
+	echo $(jq -n \
+                --arg id "$d_id" \
+                --arg name "$d_name" \
+                --arg has_windows "$has_windows" \
+                '{id: $id, name: $name, has_windows: $has_windows}')
+}
+
+function __bundle_desktops() {
+	local id_array
+	local name_array
+	local array
+
+	array=()
+	id_array=($(bspc query -D))
+	name_array=($(bspc query -D --names))
+
+        for ((i=0;i<"${#id_array[@]}";i++)); do
+		id=${id_array[$i]}
+		has_windows=$(__has_windows $id)
+		name=${name_array[$i]}
+		json=$(jq -n \
+	                 --arg id "$id" \
+		         --arg name "$name" \
+		         --arg has_windows "$has_windows" \
+		         '{id: $id, name: $name, has_windows: $has_windows}')
+		array+=("$json")
+	done
+	
+	echo $(jq -c -n '$ARGS.positional' --args "${array[@]}")
+}
+
+echo $(__bundle_desktops)
+
+bspc subscribe desktop_add | while read line
+do
+        echo $(__bundle_desktops)
+done &
+
+bspc subscribe desktop_remove | while read line
+do
+        echo $(__bundle_desktops)
+done &
+
+bspc subscribe node_add | while read line
+do	
+        echo $(__bundle_desktops)
+done &
+
+bspc subscribe node_remove | while read line
+do
+        echo $(__bundle_desktops)
+done &
+
+bspc subscribe node_transfer | while read line
+do
+	echo $(__bundle_desktops)
+done;
