@@ -1,4 +1,4 @@
-(include "./widgets/bar/bar.yuck")
+(include "./widgets/bar/eww.yuck")
 
 (defwindow powermenu
   :monitor 0

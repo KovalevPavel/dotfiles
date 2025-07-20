@@ -18,7 +18,7 @@ super + Escape
 # swap keyboard layout
 #
 ctrl + @space
-        setxkbmap -query | grep -q 'us' && setxkbmap ru || setxkbmap us,ru
+        setxkbmap -query | grep -q 'us' && setxkbmap ru || setxkbmap us
 
 #
 # bspwm hotkeys
