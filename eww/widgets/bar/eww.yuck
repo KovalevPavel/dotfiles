@@ -90,7 +90,7 @@
 
 
 (deflisten music :initial ""
-  "playerctl --follow metadata --format '{{ artist }} - {{ title }}' || true")
+  "playerctl --follow metadata --format '{{trunc(artist,20)}} - {{trunc(title,40)}}' || true")
 
 (defpoll volume :interval "1s"
   "scripts/getvol")
